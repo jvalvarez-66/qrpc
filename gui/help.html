@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QRPC Calculator — User Manual</title>
+<style>
+:root {
+  --accent:#2C4F9E; --accent-d:#1A3270; --bg:#F8F9FA;
+  --text:#1A1A2E; --sub:#4A5568; --border:#B0BEC5;
+  --green:#0D6832; --amber:#7B4C00; --red:#8B0000;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;
+     color:var(--text);background:var(--bg);display:flex;min-height:100vh}
+nav{width:220px;min-width:220px;background:var(--accent-d);color:#fff;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    padding-bottom:32px;flex-shrink:0}
+nav .logo{padding:18px 16px 14px;font-weight:700;font-size:13px;
+          background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.1)}
+nav .logo span{display:block;font-size:10px;font-weight:400;
+               color:rgba(255,255,255,.6);margin-top:3px}
+nav ul{list-style:none;margin-top:6px}
+nav ul li a{display:block;padding:7px 16px 7px 20px;color:rgba(255,255,255,.78);
+            text-decoration:none;font-size:12.5px;border-left:3px solid transparent;
+            transition:all .15s}
+nav ul li a:hover{color:#fff;background:rgba(255,255,255,.1);border-left-color:#aac}
+nav ul li a.sub{padding-left:32px;font-size:11.5px;color:rgba(255,255,255,.60)}
+nav ul li a.sub:hover{color:#fff;border-left-color:#88aacc}
+nav ul .sep{margin:10px 16px 4px;font-size:10px;font-weight:700;
+            letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+main{flex:1;padding:36px 52px 80px;max-width:860px}
+h1{font-size:26px;color:var(--accent);margin-bottom:6px}
+.subtitle{color:var(--sub);font-size:13px}
+section{margin-top:52px}
+h2{font-size:20px;color:var(--accent);border-bottom:2px solid var(--accent);
+   padding-bottom:7px;margin-bottom:18px}
+h3{font-size:15px;color:var(--accent-d);margin:22px 0 8px;font-weight:700}
+p{line-height:1.72;margin-bottom:10px;color:var(--sub)}
+code{background:#E8EFF8;color:var(--accent-d);padding:1px 6px;border-radius:3px;
+     font-family:Consolas,monospace;font-size:12px}
+pre{background:#1A2744;color:#C8D8F8;padding:14px 18px;border-radius:6px;
+    font-size:12px;line-height:1.6;margin:10px 0 14px}
+ul,ol{padding-left:22px;margin-bottom:10px}
+li{line-height:1.68;color:var(--sub);margin:4px 0}
+li strong{color:var(--text)}
+.tip{background:#EEF2F7;border-left:4px solid var(--accent);
+     padding:10px 14px;margin:12px 0;border-radius:0 5px 5px 0}
+.tip p{margin:0;color:var(--accent-d)}
+.warn{background:#FFF8E1;border-left:4px solid var(--amber);
+      padding:10px 14px;margin:12px 0;border-radius:0 5px 5px 0}
+.warn p{margin:0;color:var(--amber)}
+.note{background:#F3FBF5;border-left:4px solid var(--green);
+      padding:10px 14px;margin:12px 0;border-radius:0 5px 5px 0}
+.note p{margin:0;color:var(--green)}
+.steps{counter-reset:step}
+.steps li{list-style:none;counter-increment:step;padding-left:36px;
+          position:relative;margin:10px 0}
+.steps li::before{content:counter(step);position:absolute;left:0;top:1px;
+  width:24px;height:24px;background:var(--accent);color:#fff;border-radius:50%;
+  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+table{border-collapse:collapse;width:100%;margin:12px 0}
+th{background:var(--accent);color:#fff;padding:7px 12px;
+   text-align:left;font-size:12.5px}
+td{padding:6px 12px;border-bottom:1px solid #DDE4EE;
+   font-size:12.5px;color:var(--sub);vertical-align:top}
+tr:nth-child(even) td{background:#F0F4FA}
+figcaption{font-size:11px;color:var(--sub);margin-top:5px;font-style:italic}
+.diagram{margin:14px 0}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">QRPC Calculator<span>User Manual</span></div>
+  <ul>
+    <li class="sep">Application</li>
+    <li><a href="#overview">Introduction</a></li>
+    <li><a href="#notation">Notation</a></li>
+    <li class="sep">Relations</li>
+    <li><a href="#geometry">Relations tab</a></li>
+    <li class="sep">Neighbourhood</li>
+    <li><a href="#neighbourhood">Neighbourhood tab</a></li>
+    <li class="sep">Converse</li>
+    <li><a href="#converse">Converse tab</a></li>
+    <li class="sep">Composition</li>
+    <li><a href="#composition">Composition tab</a></li>
+    <li><a href="#compviewer" class="sub">↳ Geometric viewer</a></li>
+    <li><a href="#rulestable" class="sub">↳ Rules Table (24×24)</a></li>
+    <li><a href="#pc2verification" class="sub">↳ PC-2 verification</a></li>
+    <li><a href="#tripletinspector" class="sub">↳ Triplet inspector</a></li>
+    <li><a href="#associativity" class="sub">↳ Associativity</a></li>
+    <li class="sep">Reference</li>
+    <li><a href="#relations">The 48 Relations</a></li>
+    <li><a href="#rules">Transformation Rules</a></li>
+  </ul>
+</nav>
+
+<main>
+<h1>QRPC Calculator</h1>
+<p class="subtitle">Interactive tool for the Qualitative Rectilinear Projection Calculus</p>
+
+<div class="note"><p><strong>Labelling convention.</strong> Throughout the application, objects are labelled <strong>1</strong>, <strong>2</strong> and <strong>3</strong> (rather than i, j and k as in the research paper). Accordingly, relation names use numeric subscripts: R<sub>12</sub> instead of R<sub>ij</sub>, and component names use numeric indices: C<sub>12</sub>O<sub>1</sub><sup>FB</sup> instead of C<sub>ij</sub>O<sub>i</sub><sup>FB</sup>.</p></div>
+
+<!-- ═══════════════════════════════════════════════════════════ INTRODUCTION -->
+<section id="overview">
+<h2>Introduction</h2>
+<p>The <strong>QRPC Calculator</strong> is an interactive tool for exploring the
+<em>Qualitative Rectilinear Projection Calculus</em>, a spatial reasoning algebra that
+describes the relative position and orientation of two oriented objects whose rectilinear
+projections onto a common reference axis are considered.</p>
+
+<p>The algebra defines <strong>48 basic relations</strong> (BRs) that partition the
+configuration space of any pair of objects into mutually exclusive, jointly exhaustive
+categories (JEPD), and supports two core algebraic operations:</p>
+<ul>
+  <li><strong>Converse</strong> — swaps the roles of the two objects: R<sub>12</sub> → R<sub>21</sub>.</li>
+  <li><strong>Composition</strong> — derives R<sub>13</sub> from R<sub>12</sub> and R<sub>23</sub> via weak composition over the finite relational language.</li>
+</ul>
+
+<p>The application has <strong>four main tabs</strong>:
+<strong>Relations</strong>, <strong>Neighbourhood</strong>, <strong>Converse</strong>, and <strong>Composition</strong>.
+The Composition tab contains four internal sub-tabs: <strong>Geometric viewer</strong>,
+<strong>Rules Table (24×24)</strong>, <strong>PC-2 verification</strong>, and <strong>Associativity</strong>.
+Every panel with a <strong>?</strong> button opens this manual at the relevant section.</p>
+
+<div class="tip"><p><strong>Quick start:</strong> open <strong>Relations</strong>
+and drag the objects to see a live relation. Switch to <strong>Neighbourhood</strong>
+to explore geometric adjacency between basic relations. Switch to <strong>Converse</strong>
+to observe the role swap. Then open <strong>Composition → Geometric viewer</strong>
+to explore how three objects compose.</p></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ NOTATION -->
+<section id="notation">
+<h2>Notation</h2>
+<p>Every basic QRPC relation is a tuple of six qualitative components. Each component
+captures a distinct geometric aspect of the spatiotemporal configuration between two
+oriented objects 1 and 2:</p>
+
+<table>
+  <tr><th>Component</th><th>Symbol</th><th>Domain</th><th>Meaning</th></tr>
+  <tr><td><strong>P<sub>12</sub></strong></td><td>Projection type</td>
+      <td>X, ↑↑, ↑↓, ↑, ↕</td>
+      <td>Relative arrangement of the rectilinear projections of objects 1 and 2:
+          <strong>X</strong> = crossing; <strong>↑↑</strong> = parallel same direction;
+          <strong>↑↓</strong> = parallel opposite; <strong>↑</strong> = overlapping same direction;
+          <strong>↕</strong> = overlapping opposite direction.</td></tr>
+  <tr><td><strong>C<sub>12</sub>O<sub>1</sub><sup>FB</sup></strong></td><td>C<sub>12</sub>O<sub>1</sub><sup>FB</sup></td>
+      <td>+, 0, −</td>
+      <td>Position of the intersection point C<sub>12</sub> with respect to the
+          front–back dichotomy of object 1: (+) = in front, (−) = behind, (0) = at the origin of object 1.</td></tr>
+  <tr><td><strong>C<sub>12</sub>O<sub>2</sub><sup>FB</sup></strong></td><td>C<sub>12</sub>O<sub>2</sub><sup>FB</sup></td>
+      <td>+, 0, −</td>
+      <td>Position of C<sub>12</sub> with respect to the front–back dichotomy of object 2.</td></tr>
+  <tr><td><strong>O<sub>12</sub><sup>LR</sup></strong></td><td>O<sub>12</sub><sup>LR</sup></td>
+      <td>+, 0, −</td>
+      <td>Lateral position of object 1 with respect to the left–right dichotomy
+          of object 2: (+) = to the right, (−) = to the left, (0) = on the projection line.</td></tr>
+  <tr><td><strong>D<sub>12</sub><sup>LR</sup></strong></td><td>D<sub>12</sub><sup>LR</sup></td>
+      <td>+|−, −|+, 0|+, +|0, 0|−, −|0, 0|0</td>
+      <td>Qualitative representation of the lateral motion of object 1 with respect
+          to the rectilinear projection of object 2. The first value indicates the
+          region from which object 1 comes; the second indicates the region toward which
+          it is moving. (+) and (−) denote the right and left regions respectively;
+          (0) denotes the intersection point C<sub>12</sub>.</td></tr>
+  <tr><td><strong>O<sub>12</sub><sup>FB</sup></strong></td><td>O<sub>12</sub><sup>FB</sup></td>
+      <td>+, 0, −</td>
+      <td>Position of object 1 with respect to the front–back orientation of object 2
+          when a virtual overlap of their rectilinear projections is performed:
+          (+) = object 1 in front of object 2, (−) = behind, (0) = same position.</td></tr>
+</table>
+
+<p>Some components exhibit <strong>ambivalence</strong> — they take two simultaneous values —
+when the geometric configuration places them at a qualitative boundary (e.g.
+C<sub>12</sub>O<sub>2</sub><sup>FB</sup> = 0, or P<sub>12</sub> ∈ {↑↑, ↑↓, ↑, ↕}.
+These ambivalent states are resolved through their conceptual neighbourhood transitions.</p>
+
+<h3>Relation display formats</h3>
+<p>Throughout the application, basic relations can be displayed in three formats:</p>
+<ul>
+  <li><strong>Instantiated representation</strong> — the complete six-component tuple, showing all six qualitative
+  components explicitly, in the order
+  &langle;P<sub>12</sub>, C<sub>12</sub>O<sub>1</sub><sup>FB</sup>,
+  C<sub>12</sub>O<sub>2</sub><sup>FB</sup>, O<sub>12</sub><sup>LR</sup>,
+  D<sub>12</sub><sup>LR</sup>, O<sub>12</sub><sup>FB</sup>&rangle;.
+  This format is shown in the <em>Signature diagram</em> sub-panel of the Geometry editor.</li>
+
+  <li><strong>Canonical representation</strong> — retains only the components necessary to identify the
+  relation unambiguously; components inferrable from the remaining ones are replaced by an
+  underscore&nbsp;(<code>_</code>). This is the relational vocabulary of QRPC as defined in the
+  research paper (Table&nbsp;1). It is the primary format used in all panels, selectors, and result tables.</li>
+
+  <li><strong>Compact form</strong> — a purely typographic reorganisation of the canonical
+  representation using superscripts and subscripts (e.g. X<sup>+−</sup><sub>+−</sub>).
+  It carries no additional information beyond the canonical representation. Used in the
+  Neighbourhood graph node labels and in the 24×24 composition rules table headers.</li>
+</ul>
+
+<h4>Example: relation <code>&lt;X,+,&#8722;,+,_,&#8722;&gt;</code></h4>
+<p>The following shows the same basic relation in its three representations:</p>
+<table>
+  <tr>
+    <th>Representation</th>
+    <th>Form</th>
+    <th>Notes</th>
+  </tr>
+  <tr>
+    <td><strong>Instantiated representation</strong></td>
+    <td><code>&langle;X,&nbsp;+,&nbsp;&#8722;,&nbsp;+,&nbsp;+|0,&nbsp;&#8722;&rangle;</code></td>
+    <td>All six components explicit. D<sub>12</sub><sup>LR</sup>&nbsp;=&nbsp;+|0 means object 1 is approaching C<sub>12</sub> from the right.</td>
+  </tr>
+  <tr>
+    <td><strong>Canonical representation</strong> (in-line text)</td>
+    <td><code>&lt;X,&nbsp;+,&nbsp;&#8722;,&nbsp;+,&nbsp;_,&nbsp;&#8722;&gt;</code></td>
+    <td>D<sub>12</sub><sup>LR</sup> is replaced by <code>_</code> because it is fully determined by O<sub>12</sub><sup>LR</sup>&nbsp;=&nbsp;− in a crossing (X) configuration: object 1 must be moving toward C<sub>12</sub>, so D<sub>12</sub><sup>LR</sup> is always +|0.</td>
+  </tr>
+  <tr>
+    <td><strong>Compact form</strong></td>
+    <td>X<sup>+&#8722;</sup><sub>+&#8722;</sub></td>
+    <td>Superscripts encode C<sub>12</sub>O<sub>1</sub><sup>FB</sup> and C<sub>12</sub>O<sub>2</sub><sup>FB</sup>; subscripts encode O<sub>12</sub><sup>LR</sup> and O<sub>12</sub><sup>FB</sup>. The omitted D<sub>12</sub><sup>LR</sup> does not appear.</td>
+  </tr>
+</table>
+<p class="note">Note: relations in the PAR and OVL families may admit <strong>more than one
+instantiated representation</strong> due to geometric ambivalence — when the configuration sits
+at a qualitative boundary, two component values are simultaneously valid. The canonical
+representation and compact form are unique in all cases.</p>
+
+<h3>Canonical representation and its compact form</h3>
+<p>The <strong>canonical representation</strong> is the primary display format across the application — selectors, result tables, converse table, and composition panels all show relations in canonical form (e.g. <code>&lt;X,+,−,+,_,−&gt;</code>). The <strong>compact form</strong> is a purely typographic reorganisation of the canonical representation using superscripts and subscripts — e.g. X⁺⁻<sub>+−</sub> — and is used in the <strong>Neighbourhood graph</strong> node labels and in the <strong>24×24 composition rules table</strong> column and row headers. The <strong>instantiated representation</strong> (all six components explicit, no wildcards) appears only in the <em>Signature diagram</em> sub-panel of the Geometry editor, where it shows the context-specific realisation of the identified relation.</p>
+
+<table>
+  <tr><th>Symbol</th><th>Family</th><th>Description</th></tr>
+  <tr><td><code>X</code></td><td>Crossing</td><td>Projections cross at a finite point C<sub>12</sub></td></tr>
+  <tr><td><code>↑↑</code></td><td>PAR same</td><td>Parallel projections, same direction</td></tr>
+  <tr><td><code>↑↓</code></td><td>PAR opposite</td><td>Parallel projections, opposite directions</td></tr>
+  <tr><td><code>↑</code></td><td>OVL same</td><td>Overlapping (colinear) projections, same direction</td></tr>
+  <tr><td><code>↕</code></td><td>OVL opposite</td><td>Overlapping (colinear) projections, opposite directions</td></tr>
+</table>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ GEOMETRY — RELATION -->
+<section id="geometry">
+<h2>Relations tab</h2>
+<p>An interactive canvas where two oriented objects 1 (blue) and
+2 (red) can be freely positioned and rotated. The basic relation is
+identified in real time and displayed in the right panel.</p>
+
+<p>The <strong>Relations</strong> and <strong>Converse</strong> tabs share the same
+pair of objects: moving an object in either tab updates the other simultaneously.</p>
+
+<div class="note"><p><strong>Operational frontier capture.</strong> In the Relations tab, X-family boundary states near <code>θ=0</code>, <code>θ=π</code>, <code>φ=0</code> or <code>φ=π</code> are visualised using a small internal tolerance band. This does not change the mathematical definition of QRPC states; it only prevents frontier configurations from being absorbed by a neighbouring interior state due to numerical tolerances.</p></div>
+
+<div class="diagram">
+<svg viewBox="0 0 580 215" xmlns="http://www.w3.org/2000/svg" width="540">
+  <rect width="580" height="215" fill="#FAFBFC" rx="6" stroke="#B0BEC5" stroke-width="1"/>
+  <g fill="#DDE4EE">
+    <circle cx="30" cy="25" r="1.4"/><circle cx="30" cy="60" r="1.4"/><circle cx="30" cy="95" r="1.4"/><circle cx="30" cy="130" r="1.4"/><circle cx="30" cy="165" r="1.4"/><circle cx="65" cy="25" r="1.4"/><circle cx="65" cy="60" r="1.4"/><circle cx="65" cy="95" r="1.4"/><circle cx="65" cy="130" r="1.4"/><circle cx="65" cy="165" r="1.4"/><circle cx="100" cy="25" r="1.4"/><circle cx="100" cy="60" r="1.4"/><circle cx="100" cy="95" r="1.4"/><circle cx="100" cy="130" r="1.4"/><circle cx="100" cy="165" r="1.4"/><circle cx="135" cy="25" r="1.4"/><circle cx="135" cy="60" r="1.4"/><circle cx="135" cy="95" r="1.4"/><circle cx="135" cy="130" r="1.4"/><circle cx="135" cy="165" r="1.4"/><circle cx="170" cy="25" r="1.4"/><circle cx="170" cy="60" r="1.4"/><circle cx="170" cy="95" r="1.4"/><circle cx="170" cy="130" r="1.4"/><circle cx="170" cy="165" r="1.4"/><circle cx="205" cy="25" r="1.4"/><circle cx="205" cy="60" r="1.4"/><circle cx="205" cy="95" r="1.4"/><circle cx="205" cy="130" r="1.4"/><circle cx="205" cy="165" r="1.4"/><circle cx="240" cy="25" r="1.4"/><circle cx="240" cy="60" r="1.4"/><circle cx="240" cy="95" r="1.4"/><circle cx="240" cy="130" r="1.4"/><circle cx="240" cy="165" r="1.4"/><circle cx="275" cy="25" r="1.4"/><circle cx="275" cy="60" r="1.4"/><circle cx="275" cy="95" r="1.4"/><circle cx="275" cy="130" r="1.4"/><circle cx="275" cy="165" r="1.4"/><circle cx="310" cy="25" r="1.4"/><circle cx="310" cy="60" r="1.4"/><circle cx="310" cy="95" r="1.4"/><circle cx="310" cy="130" r="1.4"/><circle cx="310" cy="165" r="1.4"/><circle cx="345" cy="25" r="1.4"/><circle cx="345" cy="60" r="1.4"/><circle cx="345" cy="95" r="1.4"/><circle cx="345" cy="130" r="1.4"/><circle cx="345" cy="165" r="1.4"/><circle cx="380" cy="25" r="1.4"/><circle cx="380" cy="60" r="1.4"/><circle cx="380" cy="95" r="1.4"/><circle cx="380" cy="130" r="1.4"/><circle cx="380" cy="165" r="1.4"/><circle cx="415" cy="25" r="1.4"/><circle cx="415" cy="60" r="1.4"/><circle cx="415" cy="95" r="1.4"/><circle cx="415" cy="130" r="1.4"/><circle cx="415" cy="165" r="1.4"/><circle cx="450" cy="25" r="1.4"/><circle cx="450" cy="60" r="1.4"/><circle cx="450" cy="95" r="1.4"/><circle cx="450" cy="130" r="1.4"/><circle cx="450" cy="165" r="1.4"/><circle cx="485" cy="25" r="1.4"/><circle cx="485" cy="60" r="1.4"/><circle cx="485" cy="95" r="1.4"/><circle cx="485" cy="130" r="1.4"/><circle cx="485" cy="165" r="1.4"/><circle cx="520" cy="25" r="1.4"/><circle cx="520" cy="60" r="1.4"/><circle cx="520" cy="95" r="1.4"/><circle cx="520" cy="130" r="1.4"/><circle cx="520" cy="165" r="1.4"/><circle cx="555" cy="25" r="1.4"/><circle cx="555" cy="60" r="1.4"/><circle cx="555" cy="95" r="1.4"/><circle cx="555" cy="130" r="1.4"/><circle cx="555" cy="165" r="1.4"/>
+  </g>
+  <line x1="86.0" y1="22.6" x2="494.0" y2="187.4" stroke="#2C4F9E" stroke-width="2" opacity="0.22"/>
+  <line x1="317.8" y1="116.2" x2="375.3" y2="139.5" stroke="#2C4F9E" stroke-width="5" stroke-linecap="round" opacity="0.75"/>
+  <line x1="262.2" y1="93.8" x2="204.7" y2="70.5" stroke="#2C4F9E" stroke-width="5" stroke-linecap="round" opacity="0.75"/>
+  <line x1="290.0" y1="105.0" x2="415.2" y2="155.6" stroke="#2C4F9E" stroke-width="2.8"/>
+  <polygon points="415.2,155.6 402.5,157.6 407.4,145.3" fill="#2C4F9E"/>
+  <circle cx="290" cy="105" r="10" fill="#2C4F9E"/>
+  <text x="304" y="91" font-size="13" fill="#2C4F9E" font-weight="bold">O</text>
+  <path d="M 320.1,94.1 A 32,32 0 0,1 300.9,135.1" fill="none" stroke="#9AAABB" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="300.9,135.1 294.9,125.1 305.9,127.1" fill="#9AAABB"/>
+  <line x1="282.0" y1="96.0" x2="253" y2="60" stroke="#9AAABB" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="375.3" y1="139.5" x2="405" y2="125" stroke="#9AAABB" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="204.7" y1="70.5" x2="208" y2="105" stroke="#9AAABB" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="417.2" y1="153.6" x2="433" y2="149" stroke="#9AAABB" stroke-width="1" stroke-dasharray="4,3"/>
+  <rect x="115" y="43" width="138" height="34" rx="4" fill="white" stroke="#B0BEC5" stroke-width="1"/>
+  <text x="121" y="58" font-size="10.5" fill="#2C4F9E">Drag circle</text>
+  <text x="121" y="72" font-size="10.5" fill="#2C4F9E">&#x2192; translate object</text>
+  <rect x="405" y="91" width="148" height="34" rx="4" fill="white" stroke="#B0BEC5" stroke-width="1"/>
+  <text x="411" y="106" font-size="10.5" fill="#0D5822">Drag front segment</text>
+  <text x="411" y="120" font-size="10.5" fill="#0D5822">&#x2192; rotate (keeps direction)</text>
+  <rect x="56" y="88" width="152" height="34" rx="4" fill="white" stroke="#B0BEC5" stroke-width="1"/>
+  <text x="62" y="103" font-size="10.5" fill="#8B0000">Drag rear segment</text>
+  <text x="62" y="117" font-size="10.5" fill="#8B0000">&#x2192; rotate (may flip direction)</text>
+  <rect x="433" y="129" width="130" height="20" rx="4" fill="white" stroke="#B0BEC5" stroke-width="1"/>
+  <text x="439" y="144" font-size="10.5" fill="#1A3270">Direction arrow</text>
+  <text x="16" y="200" font-size="10" fill="#607D8B">Mouse wheel near object also rotates it (2&#176; per notch).</text>
+</svg>
+<figcaption>
+  A single QRPC object on the canvas.
+  <strong>Drag the filled circle</strong> to translate.
+  <strong>Drag the front segment</strong> (ahead of the circle) to rotate keeping the current direction.
+  <strong>Drag the rear segment</strong> (behind) to rotate from the other end, which may flip direction.
+  The direction arrow shows the positive orientation of the projection axis.
+</figcaption>
+</div>
+
+<h3>Snap options</h3>
+<ul>
+  <li><strong>Snap parallel/opposite</strong> — snaps to ↑↑ or ↑↓ when nearly parallel.</li>
+  <li><strong>Snap to overlap</strong> — forces ↑ or ↕ when nearly collinear.</li>
+</ul>
+
+<h3>Relation table button</h3>
+<p>Opens a modal dialog with all 48 BRs. Columns: <strong>Notation</strong> (canonical form),
+sign(u₂×v), sign(u₁×v), θ, φ, θ vs φ, θ+φ.
+The currently identified relation is highlighted in blue and scrolled into view.</p>
+<p>To avoid confusion with the α, β, γ transformation rules used in composition, the Relations tab names its visual angles <strong>θ</strong> (angle between u₂ and v, at object 2) and <strong>φ</strong> (angle between u₁ and v, at object 1).</p>
+
+<h3>Right panel — Signature diagram</h3>
+<p>A scaled replica of the canvas with geometric quantities drawn on top:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="260">
+  <rect width="260" height="200" fill="#FAFBFC" rx="4" stroke="#B0BEC5" stroke-width="1"/>
+  <g fill="#DDE4EE"><circle cx="20" cy="20" r="1.2"/><circle cx="20" cy="45" r="1.2"/><circle cx="20" cy="70" r="1.2"/><circle cx="20" cy="95" r="1.2"/><circle cx="20" cy="120" r="1.2"/><circle cx="20" cy="145" r="1.2"/><circle cx="20" cy="170" r="1.2"/><circle cx="45" cy="20" r="1.2"/><circle cx="45" cy="45" r="1.2"/><circle cx="45" cy="70" r="1.2"/><circle cx="45" cy="95" r="1.2"/><circle cx="45" cy="120" r="1.2"/><circle cx="45" cy="145" r="1.2"/><circle cx="45" cy="170" r="1.2"/><circle cx="70" cy="20" r="1.2"/><circle cx="70" cy="45" r="1.2"/><circle cx="70" cy="70" r="1.2"/><circle cx="70" cy="95" r="1.2"/><circle cx="70" cy="120" r="1.2"/><circle cx="70" cy="145" r="1.2"/><circle cx="70" cy="170" r="1.2"/><circle cx="95" cy="20" r="1.2"/><circle cx="95" cy="45" r="1.2"/><circle cx="95" cy="70" r="1.2"/><circle cx="95" cy="95" r="1.2"/><circle cx="95" cy="120" r="1.2"/><circle cx="95" cy="145" r="1.2"/><circle cx="95" cy="170" r="1.2"/><circle cx="120" cy="20" r="1.2"/><circle cx="120" cy="45" r="1.2"/><circle cx="120" cy="70" r="1.2"/><circle cx="120" cy="95" r="1.2"/><circle cx="120" cy="120" r="1.2"/><circle cx="120" cy="145" r="1.2"/><circle cx="120" cy="170" r="1.2"/><circle cx="145" cy="20" r="1.2"/><circle cx="145" cy="45" r="1.2"/><circle cx="145" cy="70" r="1.2"/><circle cx="145" cy="95" r="1.2"/><circle cx="145" cy="120" r="1.2"/><circle cx="145" cy="145" r="1.2"/><circle cx="145" cy="170" r="1.2"/><circle cx="170" cy="20" r="1.2"/><circle cx="170" cy="45" r="1.2"/><circle cx="170" cy="70" r="1.2"/><circle cx="170" cy="95" r="1.2"/><circle cx="170" cy="120" r="1.2"/><circle cx="170" cy="145" r="1.2"/><circle cx="170" cy="170" r="1.2"/><circle cx="195" cy="20" r="1.2"/><circle cx="195" cy="45" r="1.2"/><circle cx="195" cy="70" r="1.2"/><circle cx="195" cy="95" r="1.2"/><circle cx="195" cy="120" r="1.2"/><circle cx="195" cy="145" r="1.2"/><circle cx="195" cy="170" r="1.2"/><circle cx="220" cy="20" r="1.2"/><circle cx="220" cy="45" r="1.2"/><circle cx="220" cy="70" r="1.2"/><circle cx="220" cy="95" r="1.2"/><circle cx="220" cy="120" r="1.2"/><circle cx="220" cy="145" r="1.2"/><circle cx="220" cy="170" r="1.2"/><circle cx="245" cy="20" r="1.2"/><circle cx="245" cy="45" r="1.2"/><circle cx="245" cy="70" r="1.2"/><circle cx="245" cy="95" r="1.2"/><circle cx="245" cy="120" r="1.2"/><circle cx="245" cy="145" r="1.2"/><circle cx="245" cy="170" r="1.2"/></g>
+  <line x1="-56.6" y1="49.3" x2="209.7" y2="135.9" stroke="#2C4F9E" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="67.0" cy="89.5" r="7" fill="#2C4F9E"/>
+  <polygon points="143.1,114.2 134.1,115.9 136.8,107.6" fill="#2C4F9E"/>
+  <text x="72.0" y="79.5" font-size="11" fill="#2C4F9E" font-weight="bold">1</text>
+  <line x1="237.5" y1="-11.7" x2="174.2" y2="162.2" stroke="#C0392B" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="193.0" cy="110.5" r="7" fill="#C0392B"/>
+  <polygon points="175.9,157.5 174.5,148.5 182.8,151.5" fill="#C0392B"/>
+  <text x="203.0" y="114.5" font-size="11" fill="#C0392B" font-weight="bold">2</text>
+  <line x1="193.0" y1="110.5" x2="67.0" y2="89.5" stroke="#0D6832" stroke-width="1.6" stroke-dasharray="5,3"/>
+  <polygon points="69.0,89.8 76.5,87.2 75.2,94.8" fill="#0D6832"/>
+  <line x1="67.0" y1="89.5" x2="19.7" y2="81.6" stroke="#0D6832" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <text x="135.0" y="96.0" font-size="11" fill="#0D6832" font-weight="bold">v</text>
+  <path d="M 185.5,131.2 A 22,22 0 0,1 171.3,106.9" fill="none" stroke="#CC5500" stroke-width="2"/>
+  <text x="165.4" y="130.6" font-size="11" fill="#CC5500" font-weight="bold">&#x03b8;</text>
+  <path d="M 95.5,98.8 A 30,30 0 0,1 37.4,84.6" fill="none" stroke="#7B4C00" stroke-width="2"/>
+  <text x="57.5" y="132.4" font-size="11" fill="#7B4C00" font-weight="bold">&#x03c6;</text>
+  <circle cx="186.5" cy="128.3" r="5" fill="#0D6832"/>
+  <text x="192.5" y="125.3" font-size="10" fill="#0D6832" font-weight="bold">C&#x2081;&#x2082;</text>
+</svg>
+<figcaption>
+  Signature diagram: vector <strong style="color:#0D6832">v = 2→1</strong>
+  (green dashed), arc <strong style="color:#CC5500">&#x03b8;</strong> at 2
+  between u&#x2082; and v, arc <strong style="color:#7B4C00">&#x03c6;</strong> at object 1
+  between u&#x2081; and v.
+  C&#x2081;&#x2082; appears for X-type relations only.
+</figcaption>
+</div>
+
+<h3>Right panel — Signature table</h3>
+<table>
+  <tr><th>Row</th><th>Content</th><th>Colour</th></tr>
+  <tr><td><strong>R₁₂ =</strong></td><td>Identified BR in canonical form</td><td>—</td></tr>
+  <tr><td><strong>Tuple(s)</strong></td><td>Instantiated &langle;P<sub>12</sub>, C<sub>12</sub>O<sub>1</sub><sup>FB</sup>, C<sub>12</sub>O<sub>2</sub><sup>FB</sup>, O<sub>12</sub><sup>LR</sup>, D<sub>12</sub><sup>LR</sup>, O<sub>12</sub><sup>FB</sup>&rangle; representation(s)</td><td>Light blue</td></tr>
+  <tr><td><strong>sign(u₂×v)</strong>, <strong>sign(u₁×v)</strong></td><td>Lateral signs → encode O<sub>12</sub><sup>LR</sup></td><td>Green=+ · Red=− · Amber=0</td></tr>
+  <tr><td><strong>θ</strong>, <strong>φ</strong>, <strong>θ+φ</strong></td><td>Angles in radians → encode C<sub>12</sub>O<sub>1</sub><sup>FB</sup>, C<sub>12</sub>O<sub>2</sub><sup>FB</sup> and O<sub>12</sub><sup>FB</sup></td><td>Green&nbsp;&lt;&nbsp;π/2 &nbsp;·&nbsp; Red&nbsp;&gt;&nbsp;π/2 &nbsp;·&nbsp; Amber&nbsp;≈&nbsp;π/2</td></tr>
+</table>
+
+<h3>Tolerance thresholds</h3>
+<table>
+  <tr><th>Parameter</th><th>Value</th><th>Controls</th></tr>
+  <tr><td><code>ANGLE_EPS</code></td><td>2.5° (≈ 0.044 rad)</td><td>Tolerance for θ/φ ≈ π/2, 0, π and parallel/crossing classification</td></tr>
+  <tr><td><code>COLINEAR_EPS</code></td><td>6 px</td><td>Max distance from origin to other's projection line for ↑/↕ classification</td></tr>
+  <tr><td><code>ZERO_EPS</code></td><td>8 px</td><td>Threshold below which a perpendicular distance is treated as zero for BR classification</td></tr>
+</table>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ NEIGHBOURHOOD -->
+<section id="neighbourhood">
+<h2>Neighbourhood tab</h2>
+<p>The <strong>Neighbourhood</strong> tab displays the geometric neighbourhood graph of the 48 QRPC basic relations. Two relations are <em>geometric neighbours</em> if their regions in the parameter space share a boundary — a continuous movement of the observed objects can transition between them without crossing a qualitative category boundary. There are no direct transitions between PAR and OVL families; all such transitions pass through an X-family relation.</p>
+
+<p>The graph has 48 nodes and 128 neighbour pairs (average 5.3 neighbours per BR). Node labels use the <strong>compact notation</strong> from the paper — superscripts for C<sub>12</sub>O<sub>1</sub><sup>FB</sup> and C<sub>12</sub>O<sub>2</sub><sup>FB</sup>, subscripts for O<sub>12</sub><sup>LR</sup>, D<sub>12</sub><sup>LR</sup> and O<sub>12</sub><sup>FB</sup> — as this is the format used in the published neighbourhood tables. The five families are colour-coded:</p>
+
+<table>
+  <tr><th>Colour</th><th>Family</th><th>Symbol</th></tr>
+  <tr><td style="background:#D0DEFA;">Blue</td><td>Crossing</td><td>X</td></tr>
+  <tr><td style="background:#C3EDCE;">Green</td><td>Parallel same direction</td><td>↑↑</td></tr>
+  <tr><td style="background:#FFF0C0;">Amber</td><td>Parallel opposite direction</td><td>↑↓</td></tr>
+  <tr><td style="background:#EDD6F5;">Purple</td><td>Overlapping same direction</td><td>↑</td></tr>
+  <tr><td style="background:#FAD4D4;">Red</td><td>Overlapping opposite direction</td><td>↕</td></tr>
+</table>
+
+<h3>Interaction</h3>
+<ul>
+  <li><strong>Click a node</strong> to select it. The selected node is highlighted in its family colour (filled), its neighbours are shown with a darker fill, and all other nodes and edges are dimmed.</li>
+  <li><strong>Click again</strong> on the selected node to deselect it and restore the full graph.</li>
+  <li><strong>Hover over a node</strong> to see its canonical form in a tooltip.</li>
+  <li>The <strong>Reset</strong> button clears any selection and restores the full graph.</li>
+  <li>The <strong>Detail panel</strong> on the right shows the selected relation in canonical form, its family name, and the complete list of its geometric neighbours — each tagged with its own family colour.</li>
+  <li>The graph lives inside a <strong>scrollable area</strong>; use the scroll bars to navigate if the window is smaller than the canvas.</li>
+</ul>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ CONVERSE -->
+<section id="converse">
+<h2>Converse tab</h2>
+<p>The Converse tab visualises the converse operation. It reuses the same pair of objects as
+the Relations tab. If R<sub>12</sub> describes the spatial configuration
+of object 1 with respect to object 2, the converse R<sub>21</sub>
+describes the same configuration as seen from object 2's perspective — the two objects
+swap roles while the physical geometry remains unchanged. The converse operator is
+<strong>involutive</strong> and <strong>strong</strong>: (r̆)̆ = r and it preserves exact
+semantic equivalence without over-approximation.</p>
+
+<h3>Left panel — algebraic converse</h3>
+<p>A BR selector lets you pick any basic relation directly and compute its converse algebraically,
+independently of the geometric canvas.</p>
+<table>
+  <tr><th>Control</th><th>Action</th></tr>
+  <tr><td><strong>Basic relation r</strong> selector</td>
+      <td>Pick any of the 48 basic relations from the catalogue.</td></tr>
+  <tr><td><strong>Compute converse r̆</strong></td>
+      <td>Computes R<sub>21</sub> for the selected r and displays both
+          the input and its converse in the Result area.</td></tr>
+  <tr><td><strong>Copy result</strong></td>
+      <td>Copies the result text to the clipboard.</td></tr>
+</table>
+
+<h3>Right panel — geometric converse</h3>
+<ul>
+  <li><strong>Right top — Converse view</strong> — a read-only diagram of the same scene with the roles of O<sub>1</sub> and O<sub>2</sub> swapped.</li>
+  <li><strong>Right bottom — Converse readout</strong> — a horizontal split:
+    <ul>
+      <li><strong>Left half</strong>: R<sub>12</sub> — the relation identified from the current scene, shown in full detail.</li>
+      <li><strong>Right half</strong>: R<sub>21</sub> — the converse of that relation, with a verification badge confirming it matches the table value.</li>
+    </ul>
+  </li>
+</ul>
+<p>The config bar provides the same <strong>Snap</strong> checkboxes and a <strong>Reset</strong> button as the Relations tab. Moving objects on the left canvas updates all readouts live.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ COMPOSITION TAB -->
+<section id="composition">
+<h2>Composition tab</h2>
+<p>The <strong>Composition</strong> tab is the core algebraic workspace. It contains
+<strong>four sub-tabs</strong> accessible via the tab bar at the top of the panel:</p>
+
+<table>
+  <tr><th>Sub-tab</th><th>Purpose</th></tr>
+  <tr><td><strong>Geometric viewer</strong></td>
+      <td>Interactive three-object canvas. Place O<sub>1</sub>, O<sub>2</sub> (pivot) and O<sub>3</sub> and observe the
+          live composition R₁₂ ∘ R₂₃ → R₁₃ with topological partition visualisation.</td></tr>
+  <tr><td><strong>Rules Table (24×24)</strong></td>
+      <td>A 24×24 table showing which π-rotation rule (0–7) applies to each pair of
+          row/column groups when computing R₁₂ ∘ R₂₃. The 48 basic relations are grouped
+          into 24 row/column entries by collapsing relations that differ only in
+          O<sub>12</sub><sup>FB</sup> — since that component transforms independently
+          and predictably under π-rotations, it does not affect which rule applies.
+          Rule 0 = direct Z lookup; rules 1–7 apply a π-rotation to reduce the
+          composition to a canonical Z pair, retrieve the result, and then apply the
+          inverse rotation to recover R₁₃.</td></tr>
+  <tr><td><strong>PC-2 verification</strong></td>
+      <td>Provides a computational proof that QRPC's composition table is complete by
+          construction: all 27,056 ordered triplets in the full composition space X satisfy
+          the path-consistency conditions. This also confirms that the 288 canonical Z entries
+          form a minimal generating set — their 3,382 triplets generate the entire composition
+          space via the seven π-rotation rules shown in the Rules Table. Contains two sub-tabs:
+          missing-triplet analysis and triplet inspector.</td></tr>
+  <tr><td><strong>Associativity</strong></td>
+      <td>Checks (R₁₂ ∘ R₂₃) ∘ R₃₄ vs R₁₂ ∘ (R₂₃ ∘ R₃₄) for any triple,
+          or runs the full 48³ scan to enumerate all non-associative triples.</td></tr>
+</table>
+
+<div class="note"><p><strong>Algebraic foundation.</strong> QRPC composition is defined as
+<em>weak composition</em>: R₁₂ ⋄ R₂₃ = ∪{Rk | φ(Rk) ∩ (φ(R₁₂) ∘ φ(R₂₃)) ≠ ∅}.
+The composition table is derived from a minimal generating subset Z of canonical
+representatives and seven π-rotation transformation rules that exploit the spatial
+symmetries of the calculus. Every entry satisfies the path-consistency conditions
+by construction.</p></div>
+</section>
+
+<!-- ══════════════════════════════════════════════ COMPOSITION GEOMETRIC VIEWER -->
+<section id="compviewer">
+<h2>Composition — Geometric viewer</h2>
+<p>An interactive canvas with <strong>three oriented objects</strong> 1 (blue),
+2 (red) and 3 (purple). 2 acts as the
+relational <strong>pivot</strong>: it is the intermediate object that chains
+R<sub>12</sub> and R<sub>23</sub> into the
+composition R<sub>12</sub> ∘ R<sub>23</sub>.</p>
+
+<p>The viewer is the geometric counterpart of the algebraic composition table.
+All displayed quantities update in real time as objects are moved.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg" width="640">
+  <rect width="700" height="360" fill="white" rx="5" stroke="#B0BEC5" stroke-width="1"/>
+  <g fill="#EEF2F7"><circle cx="40" cy="40" r="1.3"/><circle cx="80" cy="40" r="1.3"/><circle cx="120" cy="40" r="1.3"/><circle cx="160" cy="40" r="1.3"/><circle cx="200" cy="40" r="1.3"/><circle cx="240" cy="40" r="1.3"/><circle cx="280" cy="40" r="1.3"/><circle cx="320" cy="40" r="1.3"/><circle cx="360" cy="40" r="1.3"/><circle cx="400" cy="40" r="1.3"/><circle cx="440" cy="40" r="1.3"/><circle cx="480" cy="40" r="1.3"/><circle cx="520" cy="40" r="1.3"/><circle cx="560" cy="40" r="1.3"/><circle cx="600" cy="40" r="1.3"/><circle cx="640" cy="40" r="1.3"/><circle cx="680" cy="40" r="1.3"/><circle cx="40" cy="80" r="1.3"/><circle cx="80" cy="80" r="1.3"/><circle cx="120" cy="80" r="1.3"/><circle cx="160" cy="80" r="1.3"/><circle cx="200" cy="80" r="1.3"/><circle cx="240" cy="80" r="1.3"/><circle cx="280" cy="80" r="1.3"/><circle cx="320" cy="80" r="1.3"/><circle cx="360" cy="80" r="1.3"/><circle cx="400" cy="80" r="1.3"/><circle cx="440" cy="80" r="1.3"/><circle cx="480" cy="80" r="1.3"/><circle cx="520" cy="80" r="1.3"/><circle cx="560" cy="80" r="1.3"/><circle cx="600" cy="80" r="1.3"/><circle cx="640" cy="80" r="1.3"/><circle cx="680" cy="80" r="1.3"/><circle cx="40" cy="120" r="1.3"/><circle cx="80" cy="120" r="1.3"/><circle cx="120" cy="120" r="1.3"/><circle cx="160" cy="120" r="1.3"/><circle cx="200" cy="120" r="1.3"/><circle cx="240" cy="120" r="1.3"/><circle cx="280" cy="120" r="1.3"/><circle cx="320" cy="120" r="1.3"/><circle cx="360" cy="120" r="1.3"/><circle cx="400" cy="120" r="1.3"/><circle cx="440" cy="120" r="1.3"/><circle cx="480" cy="120" r="1.3"/><circle cx="520" cy="120" r="1.3"/><circle cx="560" cy="120" r="1.3"/><circle cx="600" cy="120" r="1.3"/><circle cx="640" cy="120" r="1.3"/><circle cx="680" cy="120" r="1.3"/><circle cx="40" cy="160" r="1.3"/><circle cx="80" cy="160" r="1.3"/><circle cx="120" cy="160" r="1.3"/><circle cx="160" cy="160" r="1.3"/><circle cx="200" cy="160" r="1.3"/><circle cx="240" cy="160" r="1.3"/><circle cx="280" cy="160" r="1.3"/><circle cx="320" cy="160" r="1.3"/><circle cx="360" cy="160" r="1.3"/><circle cx="400" cy="160" r="1.3"/><circle cx="440" cy="160" r="1.3"/><circle cx="480" cy="160" r="1.3"/><circle cx="520" cy="160" r="1.3"/><circle cx="560" cy="160" r="1.3"/><circle cx="600" cy="160" r="1.3"/><circle cx="640" cy="160" r="1.3"/><circle cx="680" cy="160" r="1.3"/><circle cx="40" cy="200" r="1.3"/><circle cx="80" cy="200" r="1.3"/><circle cx="120" cy="200" r="1.3"/><circle cx="160" cy="200" r="1.3"/><circle cx="200" cy="200" r="1.3"/><circle cx="240" cy="200" r="1.3"/><circle cx="280" cy="200" r="1.3"/><circle cx="320" cy="200" r="1.3"/><circle cx="360" cy="200" r="1.3"/><circle cx="400" cy="200" r="1.3"/><circle cx="440" cy="200" r="1.3"/><circle cx="480" cy="200" r="1.3"/><circle cx="520" cy="200" r="1.3"/><circle cx="560" cy="200" r="1.3"/><circle cx="600" cy="200" r="1.3"/><circle cx="640" cy="200" r="1.3"/><circle cx="680" cy="200" r="1.3"/><circle cx="40" cy="240" r="1.3"/><circle cx="80" cy="240" r="1.3"/><circle cx="120" cy="240" r="1.3"/><circle cx="160" cy="240" r="1.3"/><circle cx="200" cy="240" r="1.3"/><circle cx="240" cy="240" r="1.3"/><circle cx="280" cy="240" r="1.3"/><circle cx="320" cy="240" r="1.3"/><circle cx="360" cy="240" r="1.3"/><circle cx="400" cy="240" r="1.3"/><circle cx="440" cy="240" r="1.3"/><circle cx="480" cy="240" r="1.3"/><circle cx="520" cy="240" r="1.3"/><circle cx="560" cy="240" r="1.3"/><circle cx="600" cy="240" r="1.3"/><circle cx="640" cy="240" r="1.3"/><circle cx="680" cy="240" r="1.3"/><circle cx="40" cy="280" r="1.3"/><circle cx="80" cy="280" r="1.3"/><circle cx="120" cy="280" r="1.3"/><circle cx="160" cy="280" r="1.3"/><circle cx="200" cy="280" r="1.3"/><circle cx="240" cy="280" r="1.3"/><circle cx="280" cy="280" r="1.3"/><circle cx="320" cy="280" r="1.3"/><circle cx="360" cy="280" r="1.3"/><circle cx="400" cy="280" r="1.3"/><circle cx="440" cy="280" r="1.3"/><circle cx="480" cy="280" r="1.3"/><circle cx="520" cy="280" r="1.3"/><circle cx="560" cy="280" r="1.3"/><circle cx="600" cy="280" r="1.3"/><circle cx="640" cy="280" r="1.3"/><circle cx="680" cy="280" r="1.3"/><circle cx="40" cy="320" r="1.3"/><circle cx="80" cy="320" r="1.3"/><circle cx="120" cy="320" r="1.3"/><circle cx="160" cy="320" r="1.3"/><circle cx="200" cy="320" r="1.3"/><circle cx="240" cy="320" r="1.3"/><circle cx="280" cy="320" r="1.3"/><circle cx="320" cy="320" r="1.3"/><circle cx="360" cy="320" r="1.3"/><circle cx="400" cy="320" r="1.3"/><circle cx="440" cy="320" r="1.3"/><circle cx="480" cy="320" r="1.3"/><circle cx="520" cy="320" r="1.3"/><circle cx="560" cy="320" r="1.3"/><circle cx="600" cy="320" r="1.3"/><circle cx="640" cy="320" r="1.3"/><circle cx="680" cy="320" r="1.3"/></g>
+  <line x1="0" y1="175.6" x2="700" y2="299.0" stroke="#2C4F9E" stroke-width="1.8" opacity="0.22"/>
+  <line x1="387.3" y1="0" x2="219.4" y2="360" stroke="#C0392B" stroke-width="1.8" opacity="0.22"/>
+  <line x1="700" y1="146.3" x2="112.9" y2="360" stroke="#6A0DAD" stroke-width="1.8" opacity="0.22"/>
+  <line x1="43.0" y1="183.2" x2="80.5" y2="189.8" stroke="#2C4F9E" stroke-width="5" stroke-linecap="round" opacity="0.42"/>
+  <line x1="139.5" y1="200.2" x2="177.0" y2="206.8" stroke="#2C4F9E" stroke-width="5" stroke-linecap="round" opacity="0.42"/>
+  <line x1="110" y1="195" x2="148" y2="201.6" stroke="#2C4F9E" stroke-width="2.8"/>
+  <polygon points="151.4,202.3 139.4,206.8 141.7,194.0" fill="#2C4F9E"/>
+  <circle cx="110" cy="195" r="8.5" fill="#2C4F9E"/>
+  <text x="93" y="183" font-size="13" fill="#2C4F9E" font-weight="bold" font-family="Arial, sans-serif">1</text>
+  <line x1="378.7" y1="18.4" x2="362.7" y2="52.8" stroke="#C0392B" stroke-width="5" stroke-linecap="round" opacity="0.42"/>
+  <line x1="337.3" y1="107.2" x2="321.3" y2="141.6" stroke="#C0392B" stroke-width="5" stroke-linecap="round" opacity="0.42"/>
+  <line x1="350" y1="80" x2="334.3" y2="115.0" stroke="#C0392B" stroke-width="2.8"/>
+  <polygon points="332.3,118.1 331.0,105.3 342.8,110.8" fill="#C0392B"/>
+  <circle cx="350" cy="80" r="8.5" fill="#C0392B"/>
+  <text x="358" y="74" font-size="13" fill="#C0392B" font-weight="bold" font-family="Arial, sans-serif">2</text>
+  <rect x="370" y="58" width="38" height="14" rx="3" fill="#C0392B" opacity="0.12"/>
+  <text x="372" y="69" font-size="9" fill="#C0392B" font-family="Arial, sans-serif">pivot</text>
+  <line x1="643.9" y1="166.7" x2="608.2" y2="179.7" stroke="#6A0DAD" stroke-width="5" stroke-linecap="round" opacity="0.42"/>
+  <line x1="551.8" y1="200.3" x2="516.1" y2="213.3" stroke="#6A0DAD" stroke-width="5" stroke-linecap="round" opacity="0.42"/>
+  <line x1="580" y1="190" x2="547.5" y2="200.8" stroke="#6A0DAD" stroke-width="2.8"/>
+  <polygon points="544.3,203.0 552.4,193.1 556.9,205.3" fill="#6A0DAD"/>
+  <circle cx="580" cy="190" r="8.5" fill="#6A0DAD"/>
+  <text x="590" y="184" font-size="13" fill="#6A0DAD" font-weight="bold" font-family="Arial, sans-serif">3</text>
+  <line x1="26.2" y1="173.1" x2="23.8" y2="186.9" stroke="#2C4F9E" stroke-width="1.8" opacity="0.65"/>
+  <text x="10" y="172" font-size="9" fill="#2C4F9E" opacity="0.7" font-family="Arial, sans-serif">&#x2212;&#x221E;</text>
+  <line x1="111.7" y1="185.2" x2="108.3" y2="204.8" stroke="#2C4F9E" stroke-width="2.2" opacity="0.75"/>
+  <line x1="283.9" y1="215.6" x2="280.5" y2="235.2" stroke="#2C4F9E" stroke-width="2.2" opacity="0.75"/>
+  <line x1="676.2" y1="287.7" x2="673.8" y2="301.5" stroke="#2C4F9E" stroke-width="1.8" opacity="0.65"/>
+  <text x="656" y="286" font-size="9" fill="#2C4F9E" opacity="0.7" font-family="Arial, sans-serif">+&#x221E;</text>
+  <circle cx="282.2" cy="225.4" r="6.5" fill="#0D6832"/>
+  <circle cx="282.2" cy="225.4" r="3.5" fill="white"/>
+  <text x="290" y="219" font-size="11" fill="#0D6832" font-weight="bold" font-family="Arial, sans-serif">C&#x2081;&#x2082;</text>
+  <circle cx="241.2" cy="313.3" r="6.5" fill="#CC5500"/>
+  <circle cx="241.2" cy="313.3" r="3.5" fill="white"/>
+  <text x="249" y="308" font-size="11" fill="#CC5500" font-weight="bold" font-family="Arial, sans-serif">C&#x2082;&#x2083;</text>
+  <circle cx="417.4" cy="249.2" r="6.5" fill="#8B0000"/>
+  <circle cx="417.4" cy="249.2" r="3.5" fill="white"/>
+  <text x="425" y="243" font-size="11" fill="#8B0000" font-weight="bold" font-family="Arial, sans-serif">C&#x2081;&#x2083;</text>
+  <text x="216" y="126" font-size="11" fill="#7B1010" font-style="italic" font-family="Arial, sans-serif" opacity="0.8">R&#x2081;&#x2082;</text>
+  <text x="460" y="122" font-size="11" fill="#7B1010" font-style="italic" font-family="Arial, sans-serif" opacity="0.8">R&#x2082;&#x2083;</text>
+  <text x="326" y="242" font-size="11" fill="#8B0000" font-style="italic" font-family="Arial, sans-serif" opacity="0.8">R&#x2081;&#x2083;</text>
+  <text x="8" y="351" font-size="8.5" fill="#607D8B" font-family="Arial, sans-serif" opacity="0.75">scroll wheel near object &#x2192; rotate</text>
+</svg>
+<figcaption>
+  Geometric viewer canvas. O<sub>1</sub> (blue), O<sub>2</sub> (red — pivot), O<sub>3</sub> (purple).
+  Ring dots mark C<sub>12</sub> = P<sub>1</sub>∩P<sub>2</sub> (green),
+  C<sub>23</sub> = P<sub>2</sub>∩P<sub>3</sub> (amber),
+  C<sub>13</sub> = P<sub>1</sub>∩P<sub>3</sub> (dark red) — all draggable.
+  Tick marks on P<sub>1</sub> show the topological partition (−∞, O<sub>1</sub>, C<sub>12</sub>, +∞).
+</figcaption>
+</div>
+
+<h3>Canvas interaction</h3>
+<table>
+  <tr><th>Handle</th><th>Action</th></tr>
+  <tr><td><strong>Object circle</strong></td><td>Translate that object freely</td></tr>
+  <tr><td><strong>Arm segment</strong> (thick, semi-transparent)</td><td>Rotate that object</td></tr>
+  <tr><td><strong>Mouse wheel</strong> near an object</td><td>Rotate by 2° per notch</td></tr>
+  <tr><td><strong style="color:#0D6832">C₁₂</strong> ring dot (green)</td>
+      <td>Slides O<sub>1</sub> perpendicular to P<sub>1</sub> so that C<sub>12</sub> tracks the mouse onto P<sub>2</sub></td></tr>
+  <tr><td><strong style="color:#CC5500">C₂₃</strong> ring dot (amber)</td>
+      <td>Slides O<sub>3</sub> perpendicular to P<sub>3</sub> so that C<sub>23</sub> tracks the mouse onto P<sub>2</sub></td></tr>
+  <tr><td><strong style="color:#8B0000">C₁₃</strong> ring dot (dark red)</td>
+      <td>Slides O<sub>1</sub> perpendicular to P<sub>1</sub> so that C<sub>13</sub> tracks the mouse onto P<sub>3</sub></td></tr>
+</table>
+
+<h3>Config bar — Current R₁₃ dropdown</h3>
+<table>
+  <tr><th>Action</th><th>Result</th></tr>
+  <tr><td><strong>Click the label area</strong></td>
+      <td>Generates a new geometric configuration for the <em>currently selected</em> R₁₃ without opening the dropdown</td></tr>
+  <tr><td><strong>Click the arrow ▾</strong></td>
+      <td>Opens the dropdown to choose a different R₁₃ from the general relation</td></tr>
+</table>
+
+<h3>Right panel — three sub-panels</h3>
+<table>
+  <tr><th>Sub-panel</th><th>Content</th></tr>
+  <tr><td><strong>Input relations</strong></td><td>R₁₂ and R₂₃ in canonical form</td></tr>
+  <tr><td><strong>General relation R₁₂ ∘ R₂₃</strong></td>
+      <td>Full set of basic relations constituting the composition result (the <em>general relation</em>)</td></tr>
+  <tr><td><strong>Current configuration</strong></td>
+      <td>Ordering of C<sub>12</sub> relative to C<sub>23</sub> along O<sub>2</sub>'s axis,
+          and number of admissible orderings (1 or 3)</td></tr>
+</table>
+
+<h3>Number of admissible C<sub>12</sub>C<sub>23</sub> configurations</h3>
+<p><strong>Three</strong> orderings are possible when all of the following hold:</p>
+<ul>
+  <li>Both R<sub>12</sub> and R<sub>23</sub> are X (crossing) family.</li>
+  <li>All four front–back components (C<sub>12</sub>O<sub>1</sub><sup>FB</sup>,
+      C<sub>12</sub>O<sub>2</sub><sup>FB</sup>, C<sub>23</sub>O<sub>2</sub><sup>FB</sup>,
+      C<sub>23</sub>O<sub>3</sub><sup>FB</sup>) are non-zero.</li>
+  <li>C<sub>12</sub>O<sub>2</sub><sup>FB</sup> = C<sub>23</sub>O<sub>2</sub><sup>FB</sup>.</li>
+</ul>
+<p>In all other cases only <strong>one</strong> ordering is admissible.</p>
+
+<div class="tip"><p><strong>OVL relations.</strong> When a pair of objects is in an OVL relation,
+their projections are colinear and both object origins are valid reference positions for the
+intersection. The viewer marks both with ring dots C<sub>12</sub> / C<sub>12</sub>′.
+For PAR relations, projections do not cross and no intersection dot is drawn.</p></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ PC CLOSURE -->
+<section id="pc2verification">
+<h2>Composition — PC-2 verification</h2>
+<p>Verifies that the geometric construction is sufficiently precise for all
+27,056 ordered triplets in the full composition space X to satisfy the
+path-consistency conditions. The 288 canonical Z entries form a minimal
+generating set: verifying Z is sufficient to certify the full X space,
+since every pair in X is reachable from a Z entry via the 7 π-rotation rules.</p>
+
+<p><strong>cond. 2</strong>: R₁₂ ∈ r₁₃ ∘ R₃₂ — R₁₂ must be recoverable by composing r₁₃ with conv(R₂₃).<br>
+<strong>cond. 3</strong>: R₂₃ ∈ R₂₁ ∘ r₁₃ — R₂₃ must be recoverable by composing conv(R₁₂) with r₁₃.</p>
+
+<p>The panel has two sub-tabs:</p>
+<table>
+  <tr><th>Sub-tab</th><th>Content</th></tr>
+  <tr><td><strong>Missing-triplet analysis</strong></td>
+      <td>Select one of the ~3,382 canonical Z triplets and simulate what happens
+          if it is omitted from the verification basis. The analysis reports which
+          triplets stop satisfying the path-consistency conditions under that omission.
+          The <strong>Set</strong> column indicates whether each failing triplet belongs
+          to Z (canonical generating set) or X∖Z (in the full composition space but not in Z).
+          Clicking a row shows the path-consistency analysis under the reduced basis —
+          explaining exactly which condition fails when the omitted seed is removed.</td></tr>
+  <tr><td><strong>Triplet inspector</strong></td>
+      <td>Direct access: select R₁₂ and R₂₃, pick one r₁₃ from the composition result,
+          and see the full path-consistency analysis immediately.
+          See the <em>Triplet inspector</em> section below.</td></tr>
+</table>
+
+<div class="diagram">
+<svg viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg" width="480">
+  <circle cx="70" cy="110" r="26" fill="#2C4F9E"/>
+  <text x="70" y="115" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">1</text>
+  <circle cx="260" cy="110" r="26" fill="#2C4F9E"/>
+  <text x="260" y="115" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">2</text>
+  <circle cx="450" cy="110" r="26" fill="#2C4F9E"/>
+  <text x="450" y="115" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">3</text>
+  <line x1="97" y1="110" x2="233" y2="110" stroke="#CC5500" stroke-width="2.5"/>
+  <polygon points="233,110 221,104 221,116" fill="#CC5500"/>
+  <text x="165" y="97" font-size="12" fill="#CC5500" text-anchor="middle" font-weight="bold">R&#x2081;&#x2082;</text>
+  <line x1="287" y1="110" x2="423" y2="110" stroke="#CC5500" stroke-width="2.5"/>
+  <polygon points="423,110 411,104 411,116" fill="#CC5500"/>
+  <text x="355" y="97" font-size="12" fill="#CC5500" text-anchor="middle" font-weight="bold">R&#x2082;&#x2083;</text>
+  <path d="M97,97 Q260,30 423,97" fill="none" stroke="#0D6832" stroke-width="2.5" stroke-dasharray="7,4"/>
+  <polygon points="423,97 411,92 414,105" fill="#0D6832"/>
+  <text x="260" y="14" font-size="12" fill="#0D6832" text-anchor="middle" font-weight="bold">R&#x2081;&#x2083; = R&#x2081;&#x2082; &#x2218; R&#x2082;&#x2083;</text>
+  <text x="260" y="30" font-size="10" fill="#0D6832" text-anchor="middle">(inferred — one or more basic relations)</text>
+</svg>
+<figcaption>Composition derives the relation between O<sub>1</sub> and O<sub>3</sub>
+via O<sub>2</sub>. Orange = known; green dashed = inferred general relation.</figcaption>
+</div>
+
+<h3>Missing-triplet analysis</h3>
+<p>Answers the question: which path-consistency checks fail if a given Z triplet
+is removed from the verification basis? Select one of the ~3,382 canonical Z triplets,
+run the analysis, and the table shows all affected triplets tagged as
+<strong>Z</strong> (part of the canonical generating set) or
+<strong>X∖Z</strong> (in the full composition space but not in Z).</p>
+
+<p>Clicking any row in the table opens a detail panel showing the
+<strong>path-consistency analysis under the reduced basis</strong> — that is,
+the same verification that the full algebra passes, but with the omitted seed
+and its entire π-orbit removed. The panel shows:</p>
+<ul>
+  <li>Which condition (cond. 2 and/or cond. 3) fails under the reduced basis.</li>
+  <li>The reduced composition set — the result of the supporting composition
+      after removing the omitted triplets — and why the required basic relation
+      is no longer present.</li>
+  <li>A conclusion explaining how removing the seed propagates to this triplet
+      through the π-orbit.</li>
+</ul>
+
+<div class="tip"><p><strong>Tip:</strong> Triplets labelled Z are directly
+part of the generating set and typically fail because the omitted seed is the
+canonical representative itself (rule 0) or one of its π-images (rules 1–7).
+Triplets labelled X∖Z fail because they depend on the omitted orbit as their
+only supporting composition path in the full space.</p></div>
+</section>
+
+<!-- ══════════════════════════════════════════ TRIPLET INSPECTOR -->
+<section id="tripletinspector">
+<h2>Composition — Triplet inspector</h2>
+<p>The <strong>Triplet inspector</strong> gives direct, search-free access to the path-consistency
+analysis for any specific triplet (R&#x2081;&#x2082;, R&#x2082;&#x2083;, r&#x2081;&#x2083;),
+without having to browse the missing-triplet analysis tab.</p>
+
+<h3>How to use it</h3>
+<ol>
+  <li>Select <strong>R&#x2081;&#x2082;</strong> and <strong>R&#x2082;&#x2083;</strong> from the two drop-down selectors.
+      The composition R&#x2081;&#x2082; &#x2218; R&#x2082;&#x2083; is computed immediately and displayed as a set of basic relations.</li>
+  <li>Choose one result relation <strong>r&#x2081;&#x2083;</strong> from the third selector.
+      Only relations that belong to the composition result are listed —
+      invalid combinations cannot be selected.</li>
+  <li>Click <strong>Analyse triplet</strong> to run the full path-consistency verification.</li>
+</ol>
+
+<h3>Reading the result</h3>
+<table>
+  <tr><th style="width:12%">Condition</th><th style="width:33%">Formula</th><th style="width:55%">Meaning</th></tr>
+  <tr><td><strong>cond. 2</strong></td>
+      <td style="white-space:nowrap">R<sub>12</sub> ∈ r<sub>13</sub> ∘ R<sub>32</sub></td>
+      <td>R<sub>12</sub> must appear in the composition of r<sub>13</sub> with conv(R<sub>23</sub>).
+          The known relation between objects 1 and 2 is recoverable from the inferred r<sub>13</sub>.</td></tr>
+  <tr><td><strong>cond. 3</strong></td>
+      <td style="white-space:nowrap">R<sub>23</sub> ∈ R<sub>21</sub> ∘ r<sub>13</sub></td>
+      <td>R<sub>23</sub> must appear in the composition of conv(R<sub>12</sub>) with r<sub>13</sub>.
+          The known relation between objects 2 and 3 is recoverable from the inferred r<sub>13</sub>.</td></tr>
+</table>
+<p>Both conditions must hold for the triplet to be PC-consistent. The status bar shows
+a &#x2713;/&#x2717; summary; the full composition sets are listed in the result area for inspection.</p>
+
+<div class="tip"><p><strong>Tip:</strong> All valid QRPC triplets satisfy all path-consistency conditions.
+Use this panel to cross-check any triplet of interest — for example one found in the
+Geometric viewer or the Rules Table — without running a full verification pass.</p></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ RULES TABLE -->
+<section id="rulestable">
+<h2>Composition — Rules Table (24×24)</h2>
+<p>A 24×24 table showing which π-rule (0–7) applies to each pair of the 24 row/column groups.
+The 48 basic relations reduce to 24 groups by collapsing relations that differ only in
+O<sub>12</sub><sup>FB</sup>: since this component transforms independently under π-rotations,
+it does not determine which rule applies. Row and column headers show the compact notation
+of each group — groups with three relations (differing only in O<sub>12</sub><sup>FB</sup>)
+use <strong>ₓ</strong> as a wildcard in that position.
+<strong>Hovering</strong> over any row label or column header shows the full compact-form BR in a tooltip.</p>
+
+<p><strong>Clicking a cell</strong> opens a detail popup with:</p>
+<ol>
+  <li>Selected R₁₂ and R₂₃ in canonical form.</li>
+  <li>Rule applied — number and formula.</li>
+  <li>Z-lookup pair after rotation.</li>
+  <li>R₁₃ result set.</li>
+  <li><strong>Trace summary</strong> — original pair → canonical Z pair → Z result → recovered final result.</li>
+</ol>
+<p>A <strong>Copy trace</strong> button copies the full derivation path to the clipboard.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ ASSOCIATIVITY -->
+<section id="associativity">
+<h2>Composition — Associativity</h2>
+<p>Checks whether <strong>(R₁₂ ∘ R₂₃) ∘ R₃₄ = R₁₂ ∘ (R₂₃ ∘ R₃₄)</strong>.
+QRPC weak composition is <em>not</em> universally associative — this is expected for
+calculi based on weak representation. Associativity is not required for path-consistency inference,
+which operates locally over relational triads.</p>
+
+<h3>Single triplet sub-tab</h3>
+<ol class="steps">
+  <li>Select R₁₂, R₂₃, R₃₄ from the three drop-downs.</li>
+  <li>Click <strong>Check associativity</strong>.</li>
+  <li>The result panel shows both intermediate compositions, both final sets, and any differing relations.</li>
+  <li>Click <strong>Copy</strong> to copy the full text to the clipboard.</li>
+</ol>
+
+<h3>Full 48³ scan sub-tab</h3>
+<ol class="steps">
+  <li>Click <strong>Run full 48³ scan</strong>.</li>
+  <li>A progress bar tracks computation (typically a few seconds).</li>
+  <li>The result table lists every non-associative triplet.</li>
+  <li>Click any row to see the full breakdown in the detail panel.</li>
+  <li>Click <strong>Export report</strong> to save the full list to a text file.</li>
+</ol>
+
+<div class="note"><p><strong>Known result:</strong> QRPC fails associativity for
+<strong>10,496</strong> of the 110,592 valid triplets (48³). Of these, 93.3% exhibit
+a subset relationship (one grouping is a superset of the other) rather than genuine
+incompatibility. This does not affect path-consistency inference.</p></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ 48 RELATIONS -->
+<section id="relations">
+<h2>Reference — The 48 Basic Relations</h2>
+<p>The 48 QRPC basic relations partition the configuration space of any pair of oriented
+objects into mutually exclusive, jointly exhaustive (JEPD) categories. They are organised
+into five families according to the projection type P<sub>12</sub>:</p>
+
+<table>
+  <tr><th>Family</th><th>Symbol</th><th>Count</th><th>Description</th></tr>
+  <tr><td><strong>X (Crossing)</strong></td><td>X</td><td>32</td>
+      <td>The rectilinear projections of objects 1 and 2 cross at a
+          finite point C<sub>12</sub>. All six components are active. These 32 relations
+          cover the full combinatorics of (C<sub>12</sub>O<sub>1</sub><sup>FB</sup>, C<sub>12</sub>O<sub>2</sub><sup>FB</sup>) ∈ {+,−}², O<sub>12</sub><sup>LR</sup> ∈ {+,0,−}, and O<sub>12</sub><sup>FB</sup> ∈ {+,0,−},
+          with the intersection point D<sub>12</sub><sup>LR</sup> motion component determined by the geometry.</td></tr>
+  <tr><td><strong>↑↑ (PAR same)</strong></td><td>↑↑</td><td>6</td>
+      <td>Parallel projections in the same direction. C<sub>12</sub> is at ±∞,
+          producing ambivalent C<sub>12</sub>O<sub>1</sub><sup>FB</sup> / C<sub>12</sub>O<sub>2</sub><sup>FB</sup> values. The six relations differ in O<sub>12</sub><sup>LR</sup> ∈ {+,−}
+          and O<sub>12</sub><sup>FB</sup> ∈ {+,0,−}.</td></tr>
+  <tr><td><strong>↑↓ (PAR opposite)</strong></td><td>↑↓</td><td>6</td>
+      <td>Parallel projections in opposite directions. Same structure as ↑↑
+          but with opposite heading of one object.</td></tr>
+  <tr><td><strong>↑ (OVL same)</strong></td><td>↑</td><td>2</td>
+      <td>Colinear (overlapping) projections in the same direction. C<sub>12</sub>
+          lies on the shared line; O<sub>12</sub><sup>FB</sup> exhibits ambivalence when C<sub>12</sub>
+          is at object positions. The two relations differ in O<sub>12</sub><sup>FB</sup> ∈ {+,−}.</td></tr>
+  <tr><td><strong>↕ (OVL opposite)</strong></td><td>↕</td><td>2</td>
+      <td>Colinear projections in opposite directions. Same structure as ↑.</td></tr>
+</table>
+
+<h3>Component values by family</h3>
+<table>
+  <tr><th>Family</th><th>P<sub>12</sub></th><th>C<sub>12</sub>O<sub>1</sub><sup>FB</sup>, C<sub>12</sub>O<sub>2</sub><sup>FB</sup></th><th>O<sub>12</sub><sup>LR</sup></th><th>D<sub>12</sub><sup>LR</sup></th><th>O<sub>12</sub><sup>FB</sup></th></tr>
+  <tr><td>X</td><td>X</td><td>{+,−} × {+,−}, or (0,+), (0,−), (+,0), (−,0)</td><td>{+,0,−}</td><td>{+|−, −|+, 0|+, +|0, 0|−, −|0}</td><td>{+,0,−,(+,−)}</td></tr>
+  <tr><td>↑↑</td><td>↑↑</td><td>ambivalent (++/−−)</td><td>{+,0,−}</td><td>{+|0 or 0|+, −|0 or 0|−, 0|0}</td><td>{+,−}</td></tr>
+  <tr><td>↑↓</td><td>↑↓</td><td>ambivalent (+−/−+)</td><td>{+,0,−}</td><td>{+|0 or 0|+, −|0 or 0|−, 0|0}</td><td>{+,−}</td></tr>
+  <tr><td>↑</td><td>↑</td><td>ambivalent (+0,−0,0+,0−)</td><td>—</td><td>0|0</td><td>{+,−,(+,−)}</td></tr>
+  <tr><td>↕</td><td>↕</td><td>ambivalent (+0,−0,0+,0−)</td><td>—</td><td>0|0</td><td>{+,−,(+,−)}</td></tr>
+</table>
+
+<p>Ambivalent values (shown in parentheses) arise at geometric boundaries where two
+qualitative interpretations are simultaneously valid. They are resolved by the
+conceptual neighbourhood: the specific transition path into or out of an ambivalent
+state determines which value applies in that transition.</p>
+
+<h3>Converse table</h3>
+<p>The converse operation is <strong>involutive</strong> (r̆)̆ = r and <strong>strong</strong>
+(no over-approximation). Key patterns:</p>
+<ul>
+  <li>X-family relations: the converse swaps the roles of objects 1 and 2,
+      which exchanges C<sub>12</sub>O<sub>1</sub><sup>FB</sup>↔C<sub>12</sub>O<sub>2</sub><sup>FB</sup>, reflects O<sub>12</sub><sup>LR</sup>, and may modify D<sub>12</sub><sup>LR</sup> and O<sub>12</sub><sup>FB</sup> through the
+      geometric transformation.</li>
+  <li>PAR relations (↑↑, ↑↓): converse within the same family, swapping O<sub>12</sub><sup>LR</sup> sign.</li>
+  <li>OVL relations (↑, ↕): converse within the same family.</li>
+  <li>All 48 relations satisfy: the converse is a basic relation (no general relation needed).</li>
+</ul>
+<p>The full converse table can be viewed and verified in the <strong>Converse tab</strong>
+using the algebraic selector, or in the <strong>PC-2 verification</strong> panel.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════ TRANSFORMATION RULES -->
+<section id="rules">
+<h2>Reference — π-Rotation Transformation Rules</h2>
+<p>Any QRPC composition R₁₃ = R₁₂ ∘ R₂₃ can be mapped to another equivalent composition
+by applying a combination of <strong>π-rotation transformations</strong> to the objects
+involved. A π-rotation inverts the front-facing direction of one object, modifying the
+components of its basic relation through the functional mappings T<sub>P</sub>, T<sub>D</sub>
+and T<sub>D*</sub>.</p>
+
+<h3>Basic π-rotation cases</h3>
+<p>For a binary relation R₁₂ between objects 1 and 2, three cases arise:</p>
+<table>
+  <tr><th>Case</th><th>Description</th><th>Components affected</th></tr>
+  <tr><td><strong>α</strong> (1π only)</td><td>Only object 1 is π-rotated</td>
+      <td>P<sub>12</sub>, C<sub>12</sub>O<sub>1</sub><sup>FB</sup>, D<sub>12</sub><sup>LR</sup> via T<sub>D*α</sub></td></tr>
+  <tr><td><strong>β</strong> (2π only)</td><td>Only object 2 is π-rotated</td>
+      <td>P<sub>12</sub>, C<sub>12</sub>O<sub>2</sub><sup>FB</sup>, O<sub>12</sub><sup>LR</sup>, D<sub>12</sub><sup>LR</sup> via T<sub>D*β</sub>, O<sub>12</sub><sup>FB</sup></td></tr>
+  <tr><td><strong>γ</strong> (both)</td><td>Both objects are π-rotated</td>
+      <td>P<sub>12</sub> is invariant; C<sub>12</sub>O<sub>1</sub><sup>FB</sup>, C<sub>12</sub>O<sub>2</sub><sup>FB</sup>, O<sub>12</sub><sup>LR</sup>, D<sub>12</sub><sup>LR</sup> via T<sub>D*γ</sub>, O<sub>12</sub><sup>FB</sup> all transform</td></tr>
+</table>
+
+<h3>The seven composition transformation rules</h3>
+<p>Given three objects and a composition R₁₃ = R₁₂ ∘ R₂₃, seven transformation rules
+map it to an equivalent composition in the generating subset Z:</p>
+
+<table>
+  <tr><th>Rule</th><th>Notation</th><th>Transformation applied</th><th>Effect on R₁₃</th></tr>
+  <tr><td>1</td><td>1π23</td><td>R₁₂ → R₁₂<sup>α</sup></td><td>R₁₃ → R₁₃<sup>α</sup></td></tr>
+  <tr><td>2</td><td>12π3</td><td>R₁₂ → R₁₂<sup>β</sup>, R₂₃ → R₂₃<sup>α</sup></td><td>R₁₃ unchanged</td></tr>
+  <tr><td>3</td><td>123π</td><td>R₂₃ → R₂₃<sup>β</sup></td><td>R₁₃ → R₁₃<sup>β</sup></td></tr>
+  <tr><td>4</td><td>1π2π3</td><td>R₁₂ → R₁₂<sup>γ</sup>, R₂₃ → R₂₃<sup>α</sup></td><td>R₁₃ → R₁₃<sup>α</sup></td></tr>
+  <tr><td>5</td><td>12π3π</td><td>R₁₂ → R₁₂<sup>β</sup>, R₂₃ → R₂₃<sup>γ</sup></td><td>R₁₃ → R₁₃<sup>β</sup></td></tr>
+  <tr><td>6</td><td>1π23π</td><td>R₁₂ → R₁₂<sup>α</sup>, R₂₃ → R₂₃<sup>β</sup></td><td>R₁₃ → R₁₃<sup>γ</sup></td></tr>
+  <tr><td>7</td><td>1π2π3π</td><td>R₁₂ → R₁₂<sup>γ</sup>, R₂₃ → R₂₃<sup>γ</sup></td><td>R₁₃ → R₁₃<sup>γ</sup></td></tr>
+</table>
+
+<p>Rule 0 (label "0" in the Rules Table) means the composition already belongs to Z and
+can be looked up directly without any transformation.</p>
+
+<h3>Generating subset Z</h3>
+<p>The <strong>generating subset Z</strong> is a minimal set of 288 canonical composition
+representatives such that every composition in the full 48×48 space X can be derived from
+one element of Z by applying one of the seven transformation rules. The construction of Z
+is guided by the conceptual neighbourhood between basic relations and by shared geometric
+structures that enable derivation of some compositions from others.</p>
+
+<p>Each element of Z is characterised explicitly through a geometric procedure based on
+topological partitioning of the rectilinear projections P<sub>1</sub> and P<sub>3</sub>,
+as described in §4.3–4.5 of the paper. The Rules Table (24×24) in the Composition sub-tab
+shows which rule applies to each pair of the 24 equivalence classes, providing an efficient
+lookup mechanism at runtime.</p>
+
+<div class="note"><p><strong>Algorithmic retrieval — GUI.</strong> Given any composition R₁₂ ∘ R₂₃,
+the GUI algorithm: (1) looks up the rule number from the 24×24 table; (2) if rule = 0, retrieves
+the general relation directly from Z; (3) otherwise applies the π-transformation to the input
+pair, retrieves the canonical Z result, then applies the inverse rotation to each basic relation
+in the result to recover the final R₁₃. This derivation is visible step by step in the Rules
+Table sub-tab detail popup.</p></div>
+
+<div class="note"><p><strong>Algorithmic retrieval — experimental PC-2.</strong>
+The A(n,d,l) random instance generator of Renz and Nebel (2001), implemented in
+<code>experiments/run_experiment.py</code>, uses a different,
+more efficient strategy optimised for repeated inference over large random networks.
+At startup it calls <code>_precompute()</code>, which iterates over all 48×48 pairs once,
+calls <code>compose()</code> for each pair, and encodes the result as a
+<strong>48-bit bitmask</strong> — one bit per basic relation — stored in a
+48×48 integer matrix <code>COMP_TABLE</code>. The converse of each relation is similarly
+encoded in a <code>CONV_TABLE</code> of 48 integers. This precomputation takes approximately
+0.3 s and is performed once before any trial begins.</p>
+<p>During each PC-2 run, constraint propagation reduces to pure bitwise operations:
+composing two relation sets <em>a</em> and <em>b</em> (each a bitmask) is
+<code>compose_masks(a, b)</code> — a single integer OR over the precomputed rows —
+and intersection is a bitwise AND. Each PC-2 iteration updates
+R<sub>ij</sub> ← R<sub>ij</sub> ∩ (R<sub>ik</sub> ∘ R<sub>kj</sub>) for all triples
+(i, k, j) in the network, repeating until no change occurs. The O(1) lookup per
+composition makes this implementation fast enough to run hundreds of trials per
+condition within the benchmark.</p></div>
+</section>
+
+</main>
+</body>
+</html>

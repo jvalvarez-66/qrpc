@@ -1,0 +1,326 @@
+# QRPC — Qualitative Rectilinear Projection Calculus
+
+Interactive desktop application for exploring the **QRPC spatial reasoning algebra**. QRPC describes qualitative relations between two oriented objects through rectilinear projections, and provides tools for visualising relations, conceptual neighbourhoods, converse, composition, PC-2 verification and associativity.
+
+The current project contains:
+
+- a PyQt6 graphical interface for interactive exploration;
+- a `qrpc/` package with the algebraic operations and verification logic;
+- a standalone experimental runner for the A(n,d,l) random-network benchmark.
+
+The calculus currently uses **48 basic relations** and supports the following core operations: **Converse**, **Composition**, and **Path Consistency (PC-2)**. PC-2 verification is available both in the GUI (Composition → PC-2 verification tab) and in the experimental workflow.
+
+---
+
+## Requirements
+
+| Dependency | Version |
+|---|---|
+| Python | ≥ 3.10 |
+| PyQt6 | ≥ 6.4 |
+
+The GUI requires PyQt6. The algebraic modules in `qrpc/` are plain Python, although some verification/reporting functions reuse formatting helpers from the GUI layer.
+
+---
+
+## Installation and launch
+
+### Option A — Anaconda / Miniconda
+
+This is a convenient option for research or teaching environments.
+
+**1. Create a dedicated environment:**
+
+```bash
+conda create -n qrpc python=3.12
+conda activate qrpc
+```
+
+**2. Install PyQt6:**
+
+```bash
+conda install -c conda-forge pyqt6
+```
+
+If `pyqt6` is not available for your platform through conda-forge, install it with pip inside the active environment:
+
+```bash
+pip install PyQt6
+```
+
+**3. Run the application from the project root:**
+
+```bash
+python main.py
+```
+
+To deactivate the environment when you are done:
+
+```bash
+conda deactivate
+```
+
+---
+
+### Option B — Standard Python with a virtual environment
+
+**1. Create and activate a virtual environment:**
+
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+**2. Install PyQt6:**
+
+```bash
+pip install PyQt6
+```
+
+**3. Run the application from the project root:**
+
+```bash
+python main.py
+```
+
+---
+
+### Option C — IDE direct setup
+
+**PyCharm**
+
+1. Open the project folder.
+2. Configure a Python interpreter with Python ≥ 3.10.
+3. Install PyQt6 in that interpreter.
+4. Run `main.py`.
+
+**VS Code**
+
+1. Open the project folder.
+2. Use `Python: Select Interpreter` from the Command Palette.
+3. Select an environment with Python ≥ 3.10.
+4. Install PyQt6 if needed.
+5. Run `main.py` from the editor or with `python main.py` in the terminal.
+
+---
+
+## Project structure
+
+```text
+qrpc_app/
+├── main.py                         # Application entry point
+├── README.md                       # This file
+│
+├── gui/                            # GUI layer (PyQt6)
+│   ├── __init__.py
+│   ├── main_window.py              # Main window and top-level tab layout
+│   ├── theme.py                    # Colours, fonts and shared widget helpers
+│   ├── help_dialog.py              # In-app help button logic
+│   ├── help.html                   # User manual opened by the ? buttons
+│   │
+│   ├── geometry_classifier.py      # Geometric analysis of object configurations
+│   ├── geometry_panel.py           # Relations tab and Converse tab implementation
+│   ├── relation_selector.py        # Basic-relation selector widget
+│   ├── neighbourhood_panel.py      # Conceptual neighbourhood graph
+│   │
+│   ├── composition_panel.py        # Composition tab container
+│   ├── composition_viewer.py       # Geometric 3-object composition viewer
+│   ├── zset_panel.py               # PC-2 verification panels (missing-triplet analysis + triplet inspector)
+│   ├── rules_table_panel.py        # Dynamic 24×24 composition-rule table
+│   ├── associativity_panel.py      # Associativity checker and full scan
+│   └── qrpc_caches.py              # GUI-side cache for composition/converse lookups
+│
+├── qrpc/                           # QRPC algebra and verification logic
+│   ├── __init__.py
+│   ├── representation.py           # P12, QVal, DLR and Representation types
+│   ├── table48.py                  # Catalogue of the 48 basic relations
+│   ├── converse.py                 # Converse operation
+│   ├── pi_rotations.py             # π-transformation rules
+│   ├── z_compositions.py           # Z-table of 288 canonical compositions
+│   ├── composition.py              # Full composition engine
+│   ├── path_consistency.py         # PC-2 path-consistency algorithm
+│   ├── br_neighbours.py            # Conceptual neighbourhood graph
+│   ├── associativity.py            # Associativity analysis helpers
+│   └── zset_verification.py        # Z-set closure and coverage analysis
+│
+└── experiments/                    # Standalone research scripts
+    ├── run_experiment.py           # A(n,d,l) random-network benchmark
+    └── results/
+        └── experiment_results.json # Output generated by the experiment runner
+```
+
+---
+
+## Main GUI tabs
+
+| Tab | Implementation | Description |
+|---|---|---|
+| **Relations** | `gui/geometry_panel.py` | Drag and rotate two oriented objects and identify the corresponding QRPC basic relation in real time. |
+| **Neighbourhood** | `gui/neighbourhood_panel.py` | Explore the conceptual neighbourhood graph of the 48 basic relations. |
+| **Converse** | `gui/geometry_panel.py` | Show the converse relation obtained by swapping the role of the two objects. |
+| **Composition** | `gui/composition_panel.py` | Container for the geometric viewer, Rules Table, PC-2 verification and Associativity sub-tabs. |
+
+
+
+---
+
+## Composition sub-tabs
+
+| Sub-tab | Implementation | Purpose |
+|---|---|---|
+| **Geometric viewer** | `gui/composition_viewer.py` | Visualise a three-object configuration for a selected composition and inspect possible witness relations. |
+| **Rules Table (24×24)** | `gui/rules_table_panel.py` | Display the dynamic 24×24 composition-rule table with compact notation (hover for full BR). |
+| **PC-2 verification** | `gui/zset_panel.py` | Missing-triplet omission analysis and direct triplet inspector for path-consistency verification. |
+| **Associativity** | `gui/associativity_panel.py` | Inspect individual triplets and run a full 48³ associativity scan. |
+
+---
+
+## Research experiment
+
+The `experiments/` folder currently contains one standalone benchmark runner:
+
+```bash
+python experiments/run_experiment.py
+```
+
+By default, it runs the QRPC A(n,d,l) benchmark with:
+
+```text
+n ∈ {10, 15, 20, 25, 30}
+d ∈ {2, 4, 6, 8, 10}
+l ∈ {1, 2, 3, 4, 5, 6, 8, 12, 24, 30}
+200 trials per valid condition
+seed = 42
+```
+
+The main parameters can be changed from the command line:
+
+```bash
+python experiments/run_experiment.py --n-values 10 20 25 --d-values 2 4 6 --l-values 4 6 8 12 24 --trials 200
+```
+
+Results are written incrementally to:
+
+```text
+experiments/results/experiment_results.json
+```
+
+The output includes the parameters, summary statistics and per-trial records for each valid condition.
+
+### PC-2 implementation in the experiment
+
+The A(n,d,l) experiment of Renz and Nebel (2001) uses a bitmask-based PC-2 implementation optimised for speed:
+
+**Precomputation (once at startup, ~0.07 s)**
+
+`_precompute()` builds two tables:
+- `COMP_TABLE` — a 48×48 integer matrix where each entry `COMP_TABLE[i][j]` is a
+  48-bit bitmask encoding the set of basic relations that result from composing
+  relation `i` with relation `j`. Built by calling `compose()` once per pair.
+- `CONV_TABLE` — a list of 48 integers where `CONV_TABLE[i]` is a bitmask encoding
+  the converse of relation `i`.
+
+**Runtime inference (O(1) per composition, with early-exit)**
+
+During each PC-2 run, constraint propagation reduces to pure bitwise operations:
+- Composing two relation sets `a` and `b` (each a bitmask) via `compose_masks(a, b)`
+  — a single integer OR over the precomputed rows. The inner loop exits immediately
+  when the accumulator reaches `UNIVERSAL` (all 48 bits set), since the result cannot
+  grow further. This early-exit gives a ×2–7 speedup for large label sizes (l ≥ 12)
+  with no effect on results.
+- Intersecting two sets is a bitwise AND.
+
+Each PC-2 iteration updates R<sub>ij</sub> ← R<sub>ij</sub> ∩ (R<sub>ik</sub> ∘ R<sub>kj</sub>)
+for all triples (i, k, j) in the network, repeating until no constraint changes.
+The O(1) lookup per composition makes it efficient enough to run 200 trials per
+condition within the benchmark.
+
+---
+
+## Documentation
+
+- **User manual:** open `gui/help.html` directly in a browser or use any **?** button inside the application.
+
+---
+
+## Execution flows
+
+**Application startup**
+```
+main.py → QApplication → gui.main_window.MainWindow
+       → Relations | Neighbourhood | Converse | Composition
+```
+
+**Geometric relation extraction**
+```
+User drag/rotation → gui.geometry_panel canvas state
+                  → gui.geometry_classifier.analyze(...)
+                  → qrpc.table48 mapping
+                  → displayed QRPC basic relation
+```
+
+**Composition lookup in the GUI**
+```
+CompositionViewerPanel → gui.qrpc_caches._build_caches()  [lazy, once]
+                      → qrpc.composition.compose_basic(...)
+                      → possible R13 witness relations
+                      → visual layout and textual result
+```
+
+**Experiment startup**
+```
+experiments/run_experiment.py → precompute relation/converse/composition tables
+                              → generate A(n,d,l) networks
+                              → run PC-2
+                              → compute metrics
+                              → write experiment_results.json incrementally
+```
+
+---
+
+## Internal dependency map
+
+| Module | Imports from | Reason |
+|---|---|---|
+| `main_window.py` | `geometry_panel`, `neighbourhood_panel`, `composition_panel` | Registers the four top-level tabs. |
+| `geometry_panel.py` | `geometry_classifier`, `table48`, `theme`, `help_dialog` | Maps visual object state to QRPC basic relations; hosts RelationsPanel and ConversePanel. |
+| `neighbourhood_panel.py` | `br_neighbours`, `rules_table_panel`, `theme`, `help_dialog` | Renders the conceptual neighbourhood graph. |
+| `composition_panel.py` | `composition_viewer`, `zset_panel`, `rules_table_panel`, `associativity_panel` | Builds the Composition tab substructure. |
+| `composition_viewer.py` | `qrpc_caches`, `geometry_classifier`, `rules_table_panel`, `theme` | Uses cached algebraic operations and geometric drawing support. |
+| `zset_panel.py` | `zset_verification`, `rules_table_panel`, `theme`, `help_dialog` | Runs closure and coverage analyses. |
+| `rules_table_panel.py` | `composition`, `relation_selector`, `theme`, `help_dialog` | Builds and displays the dynamic rules table. |
+| `associativity_panel.py` | `associativity`, `table48`, `relation_selector`, `rules_table_panel`, `theme` | Displays single and full associativity analyses. |
+| `qrpc_caches.py` | `qrpc.converse`, `qrpc.composition`, `qrpc.table48` | Builds operation caches for GUI responsiveness. |
+| `run_experiment.py` | `qrpc.composition`, `qrpc.converse`, `qrpc.table48` | Precomputes bitmask operation tables and runs the benchmark. |
+
+> **Note on layer separation:** the intended design keeps computation in `qrpc/` and presentation in `gui/`. One current exception: `qrpc/associativity.py` lazily imports `gui.rules_table_panel.pretty_br` for display formatting.
+
+---
+
+## Extension points
+
+| Goal | Where | Notes |
+|---|---|---|
+| Add or correct a basic relation | `qrpc/table48.py` | Selectors, panels and experiments all depend on this catalogue. |
+| Correct a canonical composition | `qrpc/z_compositions.py` | Re-run Closure/Coverage and at least a small experiment after changes. |
+| Change composition derivation | `qrpc/composition.py` and `qrpc/pi_rotations.py` | Validate against the Z basis and the dynamic rules table. |
+| Add a GUI analysis panel | New module in `gui/` | Register it in `main_window.py` or `composition_panel.py`. |
+| Add a standalone experiment | New script in `experiments/` | Import only from `qrpc/`; avoid GUI dependencies. |
+
+---
+
+## Recommended validation after changes
+
+After modifying any algebraic component in `qrpc/`, run at least:
+
+```bash
+python -m compileall -q .
+python experiments/run_experiment.py --n-values 10 --d-values 2 --l-values 4 --trials 5
+```
+
+For changes to composition, converse, the Z table or relation definitions, also open the GUI and check the **Composition → PC-2 verification** panel.
