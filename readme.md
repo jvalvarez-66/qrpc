@@ -324,3 +324,9 @@ python experiments/run_experiment.py --n-values 10 --d-values 2 --l-values 4 --t
 ```
 
 For changes to composition, converse, the Z table or relation definitions, also open the GUI and check the **Composition → PC-2 verification** panel.
+
+## License
+
+The source code in this repository is released under the MIT License.
+
+The experimental data and result files contained in this repository are also released under the MIT License.
